@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Для тебя, Ами 💗</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  width:100%; height:100%; overflow:hidden;
+  background: #03000d;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── BACKGROUND: gradient only, NO blur filter ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 10%,  rgba(160,0,90,.22)  0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 88% 88%,  rgba(80,0,160,.2)   0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 50%,  rgba(220,30,120,.1) 0%, transparent 65%);
+}
+
+/* ── STARS: only 60, no shooting stars ── */
+#sf { position:fixed; inset:0; pointer-events:none; z-index:0; }
+.s {
+  position:absolute; border-radius:50%; background:#fff;
+  width:var(--w); height:var(--w);
+  animation: tw var(--d) ease-in-out var(--dl) infinite;
+  will-change: opacity;
+}
+@keyframes tw {
+  0%,100% { opacity:0; }
+  50%      { opacity:var(--op); }
+}
+
+/* ── UNIVERSE ── */
+#uni {
+  position:fixed; inset:0; z-index:1;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.or {
+  position:absolute; border-radius:50%;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  border:1px solid rgba(255,110,185,.08);
+  pointer-events:none;
+}
+
+/* ── CORE ── */
+#core {
+  position:absolute; z-index:20; cursor:pointer;
+  width:74px; height:74px;
+  display:flex; align-items:center; justify-content:center;
+}
+#cg {
+  width:74px; height:74px; border-radius:50%;
+  background: radial-gradient(circle at 35% 35%, #ffaad9, #e91e8c 58%, #7b0044);
+  box-shadow: 0 0 20px rgba(255,110,180,.8), 0 0 50px rgba(233,30,140,.45);
+  display:flex; align-items:center; justify-content:center; font-size:28px;
+  animation: cp 2.8s ease-in-out infinite;
+  will-change: box-shadow;
+}
+#core:active #cg { transform:scale(.9); }
+@keyframes cp {
+  0%,100% { box-shadow: 0 0 20px rgba(255,110,180,.8), 0 0 50px rgba(233,30,140,.45); }
+  50%      { box-shadow: 0 0 28px rgba(255,110,180,1),  0 0 75px rgba(233,30,140,.75); }
+}
+.pr {
+  position:absolute; border-radius:50%;
+  border:1px solid rgba(255,120,180,.38);
+  animation: pra 3.2s ease-out infinite;
+  will-change: transform, opacity;
+}
+.pr:nth-child(2){ animation-delay:1.07s; }
+.pr:nth-child(3){ animation-delay:2.14s; }
+@keyframes pra {
+  0%   { width:74px; height:74px; opacity:.8; }
+  100% { width:220px; height:220px; opacity:0; }
+}
+
+/* ── ORBITING WORDS ── */
+.pw { position:absolute; top:50%; left:50%; width:0; height:0; cursor:pointer; z-index:10; }
+.pa-inner {
+  position:absolute; transform-origin:0 0;
+  display:flex; align-items:center; justify-content:center;
+  animation: oa linear infinite;
+  animation-duration: var(--spd);
+  animation-delay: var(--dl);
+  will-change: transform;
+}
+@keyframes oa {
+  from { transform: rotate(0deg)   translateX(var(--r)) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); }
+}
+
+.pill {
+  padding: 8px 20px; border-radius:50px;
+  white-space:nowrap; font-size:13px; font-weight:500;
+  letter-spacing:1.2px; line-height:1;
+  position:relative; user-select:none;
+}
+.pw:active .pill { transform:scale(1.15); }
+
+.v1 { background:rgba(255,80,155,.13); border:1px solid rgba(255,120,185,.48); color:#ffbedd;
+      box-shadow:0 0 12px rgba(255,80,155,.22); }
+.v2 { background:rgba(140,20,220,.13); border:1px solid rgba(185,90,255,.4);   color:#dcb8ff;
+      box-shadow:0 0 12px rgba(140,20,220,.2); }
+.v3 { background:rgba(255,170,70,.1);  border:1px solid rgba(255,195,110,.3);  color:#ffdfa8;
+      box-shadow:0 0 12px rgba(255,170,70,.18); }
+
+.gd {
+  width:5px; height:5px; border-radius:50%;
+  background:#ff7ec4; position:absolute; top:-2px; right:0;
+  box-shadow:0 0 5px #ff7ec4;
+  animation: gdb 2s ease-in-out infinite;
+}
+@keyframes gdb { 50% { opacity:0; } }
+
+/* ── TITLE ── */
+#tb {
+  position:absolute; bottom:8vh; left:50%;
+  transform:translateX(-50%); text-align:center;
+  z-index:5; pointer-events:none; width:100%;
+}
+#tm {
+  font-size:clamp(15px,4vw,21px); font-weight:300; font-style:italic;
+  color:rgba(255,188,222,.8); letter-spacing:3px;
+  text-shadow:0 0 22px rgba(255,80,160,.5);
+  animation:tfl 4.5s ease-in-out infinite alternate;
+  will-change: transform;
+}
+#ts { font-size:10px; letter-spacing:3px; text-transform:uppercase;
+      color:rgba(255,140,195,.35); margin-top:10px; }
+@keyframes tfl { from{transform:translateY(0);} to{transform:translateY(-6px);} }
+
+/* ── INTRO ── */
+#intro {
+  position:fixed; inset:0; z-index:500; background:#03000d;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:22px;
+  cursor:pointer; transition:opacity .7s ease;
+}
+#intro.gone { opacity:0; pointer-events:none; }
+
+.ib {
+  font-size:72px;
+  animation:ibb 2.3s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes ibb {
+  0%,100% { transform:translateY(0) scale(1); }
+  50%      { transform:translateY(-12px) scale(1.06); }
+}
+#it {
+  font-size:26px; font-weight:300; font-style:italic;
+  color:#ffd6eb; letter-spacing:4px;
+  text-shadow:0 0 26px rgba(255,90,160,.8);
+}
+#is {
+  font-size:11px; letter-spacing:4px; text-transform:uppercase;
+  color:rgba(255,140,195,.45);
+  animation:ibl 2.2s ease-in-out infinite;
+}
+@keyframes ibl { 50%{opacity:.15;} }
+
+/* ── MODAL ── */
+#ov {
+  position:fixed; inset:0; z-index:300;
+  background:rgba(3,0,13,0);
+  display:flex; align-items:center; justify-content:center;
+  pointer-events:none; padding:20px;
+  transition:background .4s ease;
+}
+#ov.open { background:rgba(3,0,13,.92); pointer-events:all; }
+
+#mc {
+  width:100%; max-width:400px;
+  background: linear-gradient(155deg,#120820,#0b0014 55%,#16091e);
+  border:1px solid rgba(255,110,185,.18);
+  border-radius:26px; padding:36px 28px 32px;
+  position:relative; opacity:0;
+  transform:scale(.7) translateY(40px);
+  transition:opacity .4s cubic-bezier(.34,1.56,.64,1),
+              transform .4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 0 50px rgba(255,60,160,.14), 0 28px 65px rgba(0,0,0,.85),
+              inset 0 1px 0 rgba(255,180,220,.07);
+}
+#ov.open #mc { opacity:1; transform:scale(1) translateY(0); }
+#mc::before {
+  content:''; position:absolute; top:0; left:18%; right:18%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,140,195,.55),transparent);
+}
+
+#me { font-size:50px; text-align:center; display:block; margin-bottom:16px;
+      animation:mep .5s cubic-bezier(.34,1.56,.64,1) .3s both; }
+@keyframes mep { from{transform:scale(0) rotate(-15deg);} to{transform:scale(1) rotate(0);} }
+
+#mtg { font-size:9px; letter-spacing:3.5px; text-transform:uppercase;
+       color:rgba(255,140,195,.4); text-align:center; margin-bottom:10px; }
+#mtt { font-size:20px; font-weight:300; font-style:italic; color:#ffd6eb;
+       text-align:center; margin-bottom:18px; line-height:1.4;
+       text-shadow:0 0 16px rgba(255,90,160,.44); }
+.mdv { text-align:center; color:rgba(255,110,180,.26); font-size:14px;
+       margin:14px 0; letter-spacing:8px; }
+#mb { font-size:14px; line-height:2; color:rgba(255,205,232,.65);
+      text-align:center; font-weight:300; letter-spacing:.3px; }
+#mb em { font-style:italic; color:#ffb6d9; font-weight:500; }
+
+#mbtn {
+  display:block; margin:22px auto 0;
+  background:transparent; border:1px solid rgba(255,110,180,.26);
+  border-radius:50px; color:rgba(255,145,195,.5);
+  padding:11px 30px; font-size:11px; letter-spacing:2.5px;
+  text-transform:uppercase; cursor:pointer; font-family:inherit;
+  -webkit-appearance:none;
+}
+#mbtn:active { border-color:rgba(255,110,180,.85); color:#ffb6d9; }
+
+/* ── BURST ── */
+.bst {
+  position:fixed; pointer-events:none; z-index:400; font-size:var(--sz);
+  animation:ba .9s ease-out forwards;
+}
+@keyframes ba {
+  0%   { opacity:1; transform:translate(-50%,-50%) translate(0,0) scale(.5); }
+  55%  { opacity:1; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) scale(1.2); }
+  100% { opacity:0; transform:translate(-50%,-50%) translate(var(--tx2),var(--ty2)) scale(.6); }
+}
+</style>
+</head>
+<body>
+
+<div id="sf"></div>
+
+<div id="uni" style="opacity:0;transition:opacity 1s ease .1s;">
+  <div id="rings"></div>
+  <div id="core" onclick="om('core',event)">
+    <div class="pr"></div><div class="pr"></div><div class="pr"></div>
+    <div id="cg">💗</div>
+  </div>
+  <div id="o1"></div>
+  <div id="o2"></div>
+  <div id="o3"></div>
+  <div id="tb"><div id="tm">Для тебя, моя Ами</div><div id="ts">✦ нажми на любое слово ✦</div></div>
+</div>
+
+<div id="intro" onclick="go()">
+  <div class="ib">🐻</div>
+  <div id="it">Для тебя, Ами</div>
+  <div id="is">✦ нажми, чтобы открыть ✦</div>
+</div>
+
+<div id="ov" onclick="cm(event)">
+  <div id="mc">
+    <span id="me">💗</span>
+    <div id="mtg"></div>
+    <div id="mtt"></div>
+    <div class="mdv">· · ♡ · ·</div>
+    <div id="mb"></div>
+    <button id="mbtn" onclick="cm()">← закрыть</button>
+  </div>
+</div>
+
+<script>
+const D = {
+  core:     {e:'💗',t:'самое главное',   h:'Ты — моя вселенная',      b:'В этом бесконечном пространстве есть только одна звезда, которую я ищу — <em>это ты</em>.<br><br>Пока ты в походе, я смотрю на то же небо и думаю о тебе.'},
+  скучаю:   {e:'🌙',t:'каждую минуту',  h:'Я так скучаю по тебе',    b:'Ты ушла лишь на один день, но время без тебя тянется <em>вечностью</em>.<br><br>Жду момента, когда снова увижу твою улыбку.'},
+  люблю:    {e:'💖',t:'всегда и везде', h:'Я люблю тебя',             b:'Эти три слова — самые настоящие, что у меня есть.<br><br>Ты сделала мой мир <em>ярче всех звёзд</em> в этом ночном небе.'},
+  думаю:    {e:'✨',t:'постоянно',       h:'Думаю только о тебе',      b:'Куда бы я ни посмотрел — всюду вижу <em>тебя</em>.<br><br>В каждом облаке, в каждом цветке, в каждом закате.'},
+  жду:      {e:'⏳',t:'с нетерпением',  h:'Жду твоего возвращения',  b:'Когда ты вернёшься — я обниму тебя так крепко,<br>что больше <em>никогда не отпущу</em>.'},
+  улыбка:   {e:'🌸',t:'твоя красота',   h:'Твоя улыбка',              b:'Твоя улыбка — самое красивое, что я видел в жизни.<br><br>Она освещает всё, как <em>рассвет после долгой ночи</em>.'},
+  навсегда: {e:'💫',t:'моё обещание',   h:'Навсегда твой',            b:'Неважно, сколько звёзд в этой вселенной —<br>ни одна не заменит тебя.<br><br>Я выбираю тебя снова и снова, <em>навсегда</em>.'},
+  сердце:   {e:'💝',t:'только твоё',    h:'Моё сердце — твоё',        b:'Это сердце бьётся только для тебя.<br><br>Без тебя оно тихое. И оживает снова,<br><em>когда ты возвращаешься</em>.'},
+  близко:   {e:'🌌',t:'расстояние',     h:'Ты всегда рядом',          b:'Ты в горах, я здесь — но нет настоящего расстояния.<br><br>Потому что ты всегда <em>в моём сердце</em>.'},
+  звезда:   {e:'⭐',t:'ты — свет',      h:'Ты — моя звезда',          b:'Среди миллиардов звёзд я нашёл самую яркую.<br><br>Это <em>ты, Ами</em>. Ты освещаешь мою жизнь.'},
+  родная:   {e:'🌺',t:'ты особенная',   h:'Ты — моя родная',          b:'Мир был пустым, пока не появилась ты.<br><br>Теперь каждый день наполнен <em>теплом и смыслом</em>. Ты — мой дом.'},
+  мечта:    {e:'🌙',t:'ты — реальность',h:'Ты лучше любой мечты',     b:'Я мечтал о ком-то особенном всю жизнь.<br><br>А потом появилась ты — и ты оказалась <em>лучше всего, о чём я мечтал</em>.'},
+};
+
+const vmin = Math.min(window.innerWidth, window.innerHeight);
+const ORBITS = [
+  {id:'o1', r:vmin*.27, spd:30, words:['скучаю','люблю','думаю'],            cls:'v1'},
+  {id:'o2', r:vmin*.42, spd:46, words:['жду','улыбка','навсегда','сердце'],  cls:'v2'},
+  {id:'o3', r:vmin*.56, spd:64, words:['близко','звезда','родная','мечта'],  cls:'v3'},
+];
+
+function buildRings() {
+  const wrap = document.getElementById('rings');
+  ORBITS.forEach(o => {
+    const d = document.createElement('div');
+    d.className = 'or';
+    d.style.cssText = `width:${o.r*2}px;height:${o.r*2}px;margin-left:-${o.r}px;margin-top:-${o.r}px;`;
+    wrap.appendChild(d);
+  });
+}
+
+function buildOrbits() {
+  ORBITS.forEach(o => {
+    const layer = document.getElementById(o.id);
+    layer.style.cssText = 'position:absolute;top:50%;left:50%;width:0;height:0;';
+    const n = o.words.length;
+    o.words.forEach((word, i) => {
+      const dl = -(o.spd * i / n);
+      const pw = document.createElement('div');
+      pw.className = 'pw';
+      const inner = document.createElement('div');
+      inner.className = 'pa-inner';
+      inner.style.cssText = `--r:${o.r}px;--spd:${o.spd}s;--dl:${dl}s;animation-duration:${o.spd}s;animation-delay:${dl}s;`;
+      const pill = document.createElement('div');
+      pill.className = `pill ${o.cls}`;
+      pill.textContent = word;
+      const gd = document.createElement('div');
+      gd.className = 'gd';
+      inner.appendChild(pill);
+      inner.appendChild(gd);
+      pw.appendChild(inner);
+      pw.addEventListener('click', e => { e.stopPropagation(); om(word, e); });
+      layer.appendChild(pw);
+    });
+  });
+}
+
+function buildStars() {
+  const sf = document.getElementById('sf');
+  const f  = document.createDocumentFragment();
+  /* only 60 stars — lightweight */
+  for (let i=0;i<60;i++) {
+    const el = document.createElement('div');
+    el.className = 's';
+    el.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;
+      --w:${.6+Math.random()*1.6}px;--d:${3+Math.random()*5}s;
+      --dl:${Math.random()*7}s;--op:${.25+Math.random()*.65};`;
+    f.appendChild(el);
+  }
+  sf.appendChild(f);
+}
+
+function burst(x, y) {
+  ['💗','✨','💫','🌸','💖'].sort(()=>Math.random()-.5).slice(0,8).forEach(em => {
+    const el = document.createElement('div');
+    el.className = 'bst';
+    const a=Math.random()*Math.PI*2, d1=35+Math.random()*60, d2=d1+25+Math.random()*45;
+    el.textContent = em;
+    el.style.cssText = `left:${x}px;top:${y}px;
+      --tx:${Math.cos(a)*d1}px;--ty:${Math.sin(a)*d1}px;
+      --tx2:${Math.cos(a)*d2}px;--ty2:${Math.sin(a)*d2+25}px;
+      --sz:${13+Math.random()*12}px;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 950);
+  });
+}
+
+function om(key, e) {
+  if(e){ e.stopPropagation(); burst(e.clientX, e.clientY); }
+  const d=D[key]; if(!d) return;
+  document.getElementById('me').textContent  = d.e;
+  document.getElementById('mtg').textContent = d.t;
+  document.getElementById('mtt').textContent = d.h;
+  document.getElementById('mb').innerHTML    = d.b;
+  document.getElementById('ov').classList.add('open');
+}
+function cm(e) {
+  if(e && e.target!==document.getElementById('ov') && e.target.id!=='mbtn') return;
+  document.getElementById('ov').classList.remove('open');
+}
+function go() {
+  document.getElementById('intro').classList.add('gone');
+  document.getElementById('uni').style.opacity='1';
+}
+
+buildStars();
+buildRings();
+buildOrbits();
+</script>
+</body>
+</html>
