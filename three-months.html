@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy Three Months</title>
+<style>
+  :root{
+    --void: #0a0a1e;
+    --void-deep: #050512;
+    --nebula-violet: #7b5ea7;
+    --nebula-pink: #e3a9c9;
+    --star: #f5f0ff;
+    --moon: #dce4f5;
+    --sun: #f6cf8e;
+    --ink: #2c2440;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html, body{
+    height:100%;
+    background: var(--void-deep);
+    overflow:hidden;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+
+  @font-face{
+    font-family: 'Cormorant Garamond';
+    src: local('Cormorant Garamond');
+  }
+
+  #sky{
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 40%, rgba(123,94,167,0.35), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 70% 70%, rgba(227,169,201,0.18), transparent 65%),
+      radial-gradient(ellipse 55% 45% at 25% 65%, rgba(123,94,167,0.22), transparent 60%),
+      linear-gradient(180deg, #0a0a1e 0%, #0f0d26 45%, #150f2e 100%);
+    animation: drift 40s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift{
+    0%{ background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%; filter: hue-rotate(0deg); }
+    100%{ background-position: 4% -2%, -3% 3%, 2% -3%, 0% 0%; filter: hue-rotate(6deg); }
+  }
+
+  canvas#stars{
+    position:fixed;
+    inset:0;
+    display:block;
+  }
+
+  #cover{
+    position:fixed;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding: 8vh 6vw;
+    transition: opacity 0.9s ease, filter 0.9s ease;
+    cursor:pointer;
+  }
+
+  #cover.hidden{
+    opacity:0;
+    filter: blur(6px);
+    pointer-events:none;
+  }
+
+  .eyebrow{
+    font-family: Georgia, 'Cormorant Garamond', serif;
+    font-style: italic;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: #c9b8e8;
+    opacity: 0.75;
+    margin-bottom: 26px;
+  }
+
+  .orbit-stage{
+    position: relative;
+    width: min(56vw, 320px);
+    height: min(56vw, 320px);
+    margin-bottom: 40px;
+  }
+
+  .barycenter-glow{
+    position:absolute;
+    top:50%; left:50%;
+    width: 70%;
+    height: 70%;
+    transform: translate(-50%,-50%);
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(227,169,201,0.35) 0%, rgba(123,94,167,0.12) 45%, transparent 75%);
+    filter: blur(2px);
+    animation: pulse-glow 5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow{
+    0%, 100%{ opacity:0.7; transform: translate(-50%,-50%) scale(1); }
+    50%{ opacity:1; transform: translate(-50%,-50%) scale(1.08); }
+  }
+
+  .orbit-ring{
+    position:absolute;
+    top:50%; left:50%;
+    width: 100%;
+    height: 62%;
+    transform: translate(-50%,-50%);
+    border-radius:50%;
+    border: 1px solid rgba(245,240,255,0.14);
+  }
+
+  .orbiter{
+    position:absolute;
+    top:50%; left:50%;
+    width: 100%;
+    height: 62%;
+    transform: translate(-50%,-50%);
+    animation: spin 14s linear infinite;
+  }
+
+  .orbiter.moon-orbiter{
+    animation-duration: 14s;
+  }
+  .orbiter.sun-orbiter{
+    animation-duration: 14s;
+    animation-direction: reverse;
+  }
+
+  @keyframes spin{
+    from{ transform: translate(-50%,-50%) rotate(0deg); }
+    to{ transform: translate(-50%,-50%) rotate(360deg); }
+  }
+
+  .body-dot{
+    position:absolute;
+    left:50%;
+    top:0%;
+    width: 20px;
+    height: 20px;
+    border-radius:50%;
+    transform: translate(-50%,-50%);
+  }
+
+  .sun-dot{
+    background: radial-gradient(circle at 35% 30%, #fff6df, var(--sun) 60%, #d99a4e 100%);
+    box-shadow: 0 0 18px 4px rgba(246,207,142,0.55);
+  }
+
+  .moon-dot{
+    background: radial-gradient(circle at 35% 30%, #ffffff, var(--moon) 55%, #9aa7cb 100%);
+    box-shadow: 0 0 14px 3px rgba(220,228,245,0.45);
+    width: 16px;
+    height: 16px;
+  }
+
+  h1{
+    font-weight: 500;
+    font-size: clamp(28px, 6vw, 40px);
+    color: var(--star);
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+  }
+
+  h1 em{
+    font-style: italic;
+    color: #f0cbe0;
+  }
+
+  .subtext{
+    font-family: Georgia, 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: #c7bfe0;
+    max-width: 320px;
+    line-height: 1.6;
+    margin-bottom: 44px;
+  }
+
+  .tap-cue{
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: #d9cdec;
+    opacity: 0.8;
+    animation: breathe 2.6s ease-in-out infinite;
+  }
+
+  @keyframes breathe{
+    0%, 100%{ opacity: 0.5; }
+    50%{ opacity: 0.95; }
+  }
+
+  /* Flash burst on open */
+  #flash{
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(255,246,223,0.95), rgba(246,207,142,0.5) 30%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+  #flash.burst{
+    animation: burst 1s ease-out forwards;
+  }
+  @keyframes burst{
+    0%{ opacity:0; transform: scale(0.3); }
+    35%{ opacity:1; transform: scale(1.4); }
+    100%{ opacity:0; transform: scale(2.6); }
+  }
+
+  /* Letter panel */
+  #letter-wrap{
+    position: fixed;
+    inset: 0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 5vh 5vw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease 0.15s;
+    z-index: 4;
+  }
+
+  #letter-wrap.visible{
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #letter-card{
+    position: relative;
+    width: min(640px, 92vw);
+    max-height: 84vh;
+    background: linear-gradient(180deg, rgba(28,22,50,0.72), rgba(20,15,38,0.82));
+    border: 1px solid rgba(245,240,255,0.16);
+    border-radius: 18px;
+    padding: 46px 38px 40px;
+    overflow-y: auto;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 0 60px rgba(123,94,167,0.35), inset 0 0 40px rgba(227,169,201,0.05);
+    transform: translateY(16px);
+    transition: transform 0.9s cubic-bezier(0.19,1,0.22,1);
+  }
+
+  #letter-wrap.visible #letter-card{
+    transform: translateY(0);
+  }
+
+  #letter-card::-webkit-scrollbar{ width: 6px; }
+  #letter-card::-webkit-scrollbar-thumb{ background: rgba(245,240,255,0.25); border-radius: 6px; }
+
+  .letter-heading{
+    text-align:center;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(22px, 4vw, 28px);
+    color: #f5e9f5;
+    margin-bottom: 8px;
+  }
+
+  .letter-sub{
+    text-align:center;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #b7a6dd;
+    margin-bottom: 30px;
+    opacity: 0.75;
+  }
+
+  .letter-body p{
+    font-size: 17px;
+    line-height: 1.85;
+    color: #e6dff2;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .letter-body p:first-of-type::first-letter{
+    font-size: 2.4em;
+    line-height: 0.8;
+    float: left;
+    padding-right: 8px;
+    padding-top: 4px;
+    color: #f0cbe0;
+    font-style: italic;
+  }
+
+  .signoff{
+    margin-top: 34px;
+    text-align: center;
+    font-style: italic;
+    font-size: 15px;
+    color: #cdb9ea;
+    letter-spacing: 0.06em;
+  }
+
+  #close-btn{
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(245,240,255,0.25);
+    background: rgba(255,255,255,0.04);
+    color: #e6dff2;
+    font-size: 16px;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: background 0.2s ease;
+  }
+  #close-btn:hover{ background: rgba(255,255,255,0.12); }
+
+  #mute-btn{
+    position: absolute;
+    top: 14px;
+    right: 58px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(245,240,255,0.25);
+    background: rgba(255,255,255,0.04);
+    color: #e6dff2;
+    font-size: 15px;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: background 0.2s ease, opacity 0.2s ease;
+  }
+  #mute-btn:hover{ background: rgba(255,255,255,0.12); }
+  #mute-btn.muted{ opacity: 0.45; }
+
+  @media (prefers-reduced-motion: reduce){
+    #sky{ animation: none; }
+    .orbiter{ animation: none; }
+    .barycenter-glow{ animation: none; }
+    .tap-cue{ animation: none; }
+    #flash.burst{ animation: none; opacity: 0; }
+    #letter-wrap{ transition: opacity 0.3s ease; }
+    #letter-card{ transition: none; }
+  }
+
+  @media (max-width: 420px){
+    .letter-body p{ font-size: 16px; }
+    #letter-card{ padding: 38px 24px 34px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="sky"></div>
+<canvas id="stars"></canvas>
+<div id="flash"></div>
+
+<div id="cover" role="button" tabindex="0" aria-label="Open the letter">
+  <div class="eyebrow">Three Months Together</div>
+
+  <div class="orbit-stage">
+    <div class="barycenter-glow"></div>
+    <div class="orbit-ring"></div>
+    <div class="orbiter sun-orbiter">
+      <div class="body-dot sun-dot"></div>
+    </div>
+    <div class="orbiter moon-orbiter">
+      <div class="body-dot moon-dot"></div>
+    </div>
+  </div>
+
+  <h1>Happy <em>Three Months</em></h1>
+  <p class="subtext">Two hearts, ten hours apart, still circling back to one another — every single day.</p>
+  <p class="tap-cue">tap to open</p>
+</div>
+
+<div id="letter-wrap">
+  <div id="letter-card">
+    <button id="close-btn" aria-label="Close letter">✕</button>
+    <button id="mute-btn" aria-label="Mute music">♪</button>
+    <div class="letter-heading">My Love,</div>
+    <div class="letter-sub">Three Months &amp; Counting</div>
+    <div class="letter-body">
+      <p>Happy three-month anniversary, my love. Three months of our long-distance relationship might not sound long to many, but for me, it means so much. Throughout these past three months, we've both tried so hard to keep this love alive. We're ten hours apart, and there are times when you're living one moment in time while I'm living another. Sometimes we wake up at different times, sometimes one of us is tired while the other is just starting their day, and sometimes what we want most is to be right there beside each other, but we can't because of the distance.</p>
+
+      <p>Even so, I still feel you close to my heart, and I truly want to thank you for always choosing to try for each other. We try to make each other feel okay, to make each other comfortable, to build trust and confidence in each other. Even though sometimes the distance makes us miss each other so much that we feel lonely or anxious, I want you to know that I've never taken our love lightly.</p>
+
+      <p>I know you feel the distance too, especially now that I'm not home and I'm in the city. You might be worried about me, wondering how I am, where I am, what I'm doing, or if I'm safe. And I know your concern comes from nothing but the fact that you care about me so much. That's why I wanted to write this for you to read, so that on days when you miss me or feel anxious, you'll know there's someone here who misses you and loves you just as much. I may not be in front of you right now, but I'm here for you. But my heart is always with you.</p>
+
+      <p>I want you to be assured that no matter how far apart we are, no matter if we're ten hours apart or more, I still want to maintain this relationship with the same sincerity. I want our love to be a space where we both can feel safe, comfortable, and be ourselves. I want you to know that you don't need to be afraid that distance will make me forget you, because for me, distance only separates our places, but it doesn't have enough power to divide our hearts.</p>
+
+      <p>The past three months may have included days we smiled, days we missed each other, days we understood each other, and days when we had to adjust to each other, but the most important thing for me is that we are still here and we still choose each other.</p>
+
+      <p>I want to thank you for every message, every word, every time you asked how I was, every time you worried, every time you tried to make me feel important, and every moment you shared with me. Even some of these things mean so much to me. I want you to know that I see all your efforts, and I appreciate it more than I can express in words. And I will try to make you feel the same way.</p>
+
+      <p>I want to be the one who makes you feel that no matter how far away you are, you still have someone who thinks of you, someone who wants to know how you are today, someone who wants to hear your story, and someone who is ready to be by your side in whatever way they can. I don't promise that every day will be perfect, because I know that true love isn't just about beautiful days, but I promise that I will try to communicate with you, try to understand you. And I'm trying my best to reassure you of our love.</p>
+
+      <p>I want you to fall asleep knowing how precious you are to me, and wake up knowing there's someone who loves and misses you always.</p>
+
+      <p>Today is our three-month anniversary, and I want this to be another day where we look back at everything we've been through together and feel proud of how hard we both tried to keep this love alive. Thank you for holding my hand through this long journey. Thank you for trusting me. Thank you for caring for me. And thank you for showing me that love isn't measured by the number of times we're together, but by the number of times we choose to be there for each other even when we're not in the same place.</p>
+
+      <p>I hope that one day, this ten-hour journey won't be something we have to talk about anymore, because we'll be able to be truly close. But until then, I will still love you from here, I will still miss you from here, and I will continue to try to make you feel like you're not alone. I want you to smile when you read this and feel a little shy, because this is all I want to tell you from my heart.</p>
+
+      <p>Happy three-month anniversary, my love. Thank you for these three meaningful months, and may these three months become four, five, six months, and many more months to come. Let's continue to learn about each other, grow together, and create more and more memories together. I don't know what the future holds, but one thing I know for sure is that today I still choose you, and I still want to walk forward with you. I love you so much, and no matter how many hours we're apart, my heart will always be with you.</p>
+
+      <p>Happy three-month anniversary, my love. Please remember that there's someone here who misses you terribly, worries about you deeply, and is so happy that in this vast world, we met and became each other's love.</p>
+    </div>
+    <div class="signoff">— forever yours, across every timezone</div>
+  </div>
+</div>
+
+<script>
+  // Starfield
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    canvas.width = window.innerWidth * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    initStars();
+  }
+
+  function initStars(){
+    const count = Math.floor((window.innerWidth * window.innerHeight) / 5500);
+    stars = Array.from({length: count}, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 1.3 + 0.3,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.4 + Math.random() * 0.8
+    }));
+  }
+
+  function drawStars(t){
+    ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+    for(const s of stars){
+      const twinkle = reduceMotion ? 1 : (0.55 + 0.45 * Math.sin(t * 0.001 * s.speed + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(245,240,255,${twinkle})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(drawStars);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(drawStars);
+
+  // Reveal interaction
+  const cover = document.getElementById('cover');
+  const flash = document.getElementById('flash');
+  const letterWrap = document.getElementById('letter-wrap');
+  const closeBtn = document.getElementById('close-btn');
+
+  function openLetter(){
+    cover.classList.add('hidden');
+    flash.classList.add('burst');
+    setTimeout(() => {
+      letterWrap.classList.add('visible');
+    }, 350);
+    setTimeout(() => flash.classList.remove('burst'), 1000);
+  }
+
+  function closeLetter(){
+    letterWrap.classList.remove('visible');
+    setTimeout(() => {
+      cover.classList.remove('hidden');
+    }, 200);
+  }
+
+  cover.addEventListener('click', openLetter);
+  cover.addEventListener('keypress', (e) => {
+    if(e.key === 'Enter' || e.key === ' ') openLetter();
+  });
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeLetter();
+  });
+
+  // ---- Gentle music-box melody (Web Audio API, no external files) ----
+  let audioCtx = null;
+  let musicStarted = false;
+  let musicTimeouts = [];
+  let masterGain = null;
+
+  // Sweet, simple lullaby-style phrase (Hz), with 0 = a rest
+  const NOTE = {
+    C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392.00,
+    A4:440.00, B4:493.88, C5:523.25, D5:587.33, E5:659.25, G5:783.99
+  };
+  const melody = [
+    [NOTE.E5, 0.45],[NOTE.D5, 0.45],[NOTE.C5, 0.45],[NOTE.D5, 0.45],
+    [NOTE.E5, 0.45],[NOTE.E5, 0.45],[NOTE.E5, 0.9],
+    [NOTE.D5, 0.45],[NOTE.D5, 0.45],[NOTE.D5, 0.9],
+    [NOTE.E5, 0.45],[NOTE.G5, 0.45],[NOTE.G5, 0.9],
+    [NOTE.E5, 0.45],[NOTE.D5, 0.45],[NOTE.C5, 0.45],[NOTE.D5, 0.45],
+    [NOTE.E5, 0.45],[NOTE.E5, 0.45],[NOTE.E5, 0.45],[NOTE.E5, 0.45],
+    [NOTE.D5, 0.45],[NOTE.D5, 0.45],[NOTE.E5, 0.45],[NOTE.D5, 0.45],
+    [NOTE.C5, 1.4]
+  ];
+
+  function playNote(freq, startTime, dur){
+    if(!freq) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, startTime);
+
+    // soft music-box envelope: quick gentle attack, slow decay
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(0.22, startTime + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur);
+
+    // a faint high overtone for a twinkly music-box color
+    const overtone = audioCtx.createOscillator();
+    const overtoneGain = audioCtx.createGain();
+    overtone.type = 'sine';
+    overtone.frequency.setValueAtTime(freq * 2, startTime);
+    overtoneGain.gain.setValueAtTime(0, startTime);
+    overtoneGain.gain.linearRampToValueAtTime(0.05, startTime + 0.02);
+    overtoneGain.gain.exponentialRampToValueAtTime(0.0001, startTime + dur * 0.6);
+
+    osc.connect(gain).connect(masterGain);
+    overtone.connect(overtoneGain).connect(masterGain);
+
+    osc.start(startTime);
+    osc.stop(startTime + dur + 0.05);
+    overtone.start(startTime);
+    overtone.stop(startTime + dur + 0.05);
+  }
+
+  function scheduleMelody(loop){
+    const now = audioCtx.currentTime + 0.1;
+    let cursor = now;
+    for(const [freq, dur] of melody){
+      playNote(freq, cursor, dur * 0.92);
+      cursor += dur;
+    }
+    const totalDur = melody.reduce((sum, [,d]) => sum + d, 0);
+    if(loop){
+      const t = setTimeout(() => scheduleMelody(true), totalDur * 1000 + 700);
+      musicTimeouts.push(t);
+    }
+  }
+
+  function startMusic(){
+    if(musicStarted) return;
+    musicStarted = true;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.9;
+    masterGain.connect(audioCtx.destination);
+    scheduleMelody(true);
+  }
+
+  function stopMusic(){
+    musicTimeouts.forEach(clearTimeout);
+    musicTimeouts = [];
+    musicStarted = false;
+    if(audioCtx){
+      audioCtx.close();
+      audioCtx = null;
+    }
+  }
+
+  // Start music the moment she opens the letter (user gesture satisfies autoplay rules)
+  cover.addEventListener('click', startMusic, { once: true });
+  cover.addEventListener('keypress', function musicOnKey(e){
+    if(e.key === 'Enter' || e.key === ' ') startMusic();
+  }, { once: true });
+</script>
+
+</body>
+</html>
